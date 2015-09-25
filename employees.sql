@@ -28,15 +28,6 @@ USE employees;
 
 SELECT 'CREATING DATABASE STRUCTURE' as 'INFO';
 
-DROP TABLE IF EXISTS dept_emp,
-                     dept_manager,
-                     titles,
-                     salaries, 
-                     employees, 
-                     departments;
-
-/*!50503 set default_storage_engine = InnoDB */;
-/*!50503 select CONCAT('storage engine: ', @@default_storage_engine) as INFO */;
 
 CREATE TABLE employees (
     emp_no      INT             NOT NULL,
@@ -52,62 +43,70 @@ CREATE TABLE departments (
     dept_no     CHAR(4)         NOT NULL,
     dept_name   VARCHAR(40)     NOT NULL,
     PRIMARY KEY (dept_no),
-    UNIQUE  KEY (dept_name)
+    UNIQUE  KEY (dept_no, dept_name)
 );
 
 CREATE TABLE dept_manager (
+   ID BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
    emp_no       INT             NOT NULL,
    dept_no      CHAR(4)         NOT NULL,
    from_date    DATE            NOT NULL,
    to_date      DATE            NOT NULL,
-   FOREIGN KEY (emp_no)  REFERENCES employees (emp_no)    ON DELETE CASCADE,
-   FOREIGN KEY (dept_no) REFERENCES departments (dept_no) ON DELETE CASCADE,
-   PRIMARY KEY (emp_no,dept_no)
+   FOREIGN SHARD KEY (emp_no)  REFERENCES employees (emp_no),
+   FOREIGN SHARD KEY (dept_no) REFERENCES departments (dept_no),
+   -- PRIMARY KEY (emp_no,dept_no)
+   PRIMARY KEY (ID)
 ); 
 
 CREATE TABLE dept_emp (
+    ID BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     emp_no      INT             NOT NULL,
     dept_no     CHAR(4)         NOT NULL,
     from_date   DATE            NOT NULL,
     to_date     DATE            NOT NULL,
-    FOREIGN KEY (emp_no)  REFERENCES employees   (emp_no)  ON DELETE CASCADE,
-    FOREIGN KEY (dept_no) REFERENCES departments (dept_no) ON DELETE CASCADE,
-    PRIMARY KEY (emp_no,dept_no)
+    FOREIGN SHARD KEY (emp_no)  REFERENCES employees   (emp_no) ,
+    FOREIGN SHARD KEY (dept_no) REFERENCES departments (dept_no),
+    -- PRIMARY KEY (emp_no,dept_no)
+    PRIMARY KEY (ID)
 );
 
 CREATE TABLE titles (
+    ID BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     emp_no      INT             NOT NULL,
     title       VARCHAR(50)     NOT NULL,
     from_date   DATE            NOT NULL,
     to_date     DATE,
-    FOREIGN KEY (emp_no) REFERENCES employees (emp_no) ON DELETE CASCADE,
-    PRIMARY KEY (emp_no,title, from_date)
+    FOREIGN SHARD KEY (emp_no) REFERENCES employees (emp_no),
+    -- PRIMARY KEY (emp_no,title, from_date)
+    PRIMARY KEY (ID)
 ) 
 ; 
 
 CREATE TABLE salaries (
+    ID BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     emp_no      INT             NOT NULL,
     salary      INT             NOT NULL,
     from_date   DATE            NOT NULL,
     to_date     DATE            NOT NULL,
-    FOREIGN KEY (emp_no) REFERENCES employees (emp_no) ON DELETE CASCADE,
-    PRIMARY KEY (emp_no, from_date)
+    FOREIGN SHARD KEY (emp_no) REFERENCES employees (emp_no),
+    -- PRIMARY KEY (emp_no, from_date)
+    PRIMARY KEY (ID)
 ) 
 ; 
 
-CREATE OR REPLACE VIEW dept_emp_latest_date AS
+CREATE VIEW dept_emp_latest_date AS
     SELECT emp_no, MAX(from_date) AS from_date, MAX(to_date) AS to_date
     FROM dept_emp
     GROUP BY emp_no;
 
 # shows only the current department for each employee
-CREATE OR REPLACE VIEW current_dept_emp AS
+CREATE VIEW current_dept_emp AS
     SELECT l.emp_no, dept_no, l.from_date, l.to_date
     FROM dept_emp d
         INNER JOIN dept_emp_latest_date l
         ON d.emp_no=l.emp_no AND d.from_date=l.from_date AND l.to_date = d.to_date;
 
-flush /*!50503 binary */ logs;
+
 
 SELECT 'LOADING departments' as 'INFO';
 source load_departments.dump ;
