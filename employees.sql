@@ -54,18 +54,17 @@ CREATE TABLE dept_manager (
    to_date      DATE            NOT NULL,
    -- PRIMARY KEY (emp_no,dept_no)
    PRIMARY KEY (ID),
-   SHARD KEY (emp_no,dept_no)
+   SHARD KEY (ID, emp_no,dept_no)
 ); 
 
 CREATE TABLE dept_emp (
-    ID BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     emp_no      INT             NOT NULL,
     dept_no     CHAR(4)         NOT NULL,
     from_date   DATE            NOT NULL,
     to_date     DATE            NOT NULL,
     -- PRIMARY KEY (emp_no,dept_no)
     PRIMARY KEY (ID),
-    SHARD KEY (emp_no,dept_no)
+    SHARD KEY (ID,emp_no,dept_no)
 );
 
 CREATE TABLE titles (
@@ -76,7 +75,7 @@ CREATE TABLE titles (
     to_date     DATE,
     -- PRIMARY KEY (emp_no,title, from_date)
     PRIMARY KEY (ID),
-    SHARD KEY (emp_no)
+    SHARD KEY (ID,emp_no)
 ) 
 ; 
 
@@ -88,7 +87,7 @@ CREATE TABLE salaries (
     to_date     DATE            NOT NULL,
     -- PRIMARY KEY (emp_no, from_date)
     PRIMARY KEY (ID),
-    SHARD KEY (emp_no)
+    SHARD KEY (ID,emp_no)
 ) 
 ; 
 
