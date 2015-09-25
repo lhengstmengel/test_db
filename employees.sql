@@ -44,7 +44,7 @@ CREATE TABLE departments (
     dept_name   VARCHAR(40)     NOT NULL,
     PRIMARY KEY (dept_no),
     UNIQUE  KEY (dept_no, dept_name),
-    SHARD  KEY (dept_no, dept_name),
+    SHARD  KEY (dept_no, dept_name)
 );
 
 CREATE TABLE dept_manager (
