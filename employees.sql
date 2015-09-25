@@ -47,14 +47,12 @@ CREATE TABLE departments (
 );
 
 CREATE TABLE dept_manager (
-   ID BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
    emp_no       INT             NOT NULL,
    dept_no      CHAR(4)         NOT NULL,
    from_date    DATE            NOT NULL,
    to_date      DATE            NOT NULL,
-   -- PRIMARY KEY (emp_no,dept_no)
-   PRIMARY KEY (ID),
-   SHARD KEY (ID, emp_no,dept_no)
+   PRIMARY KEY (emp_no,dept_no),
+   SHARD KEY (dept_no)
 ); 
 
 CREATE TABLE dept_emp (
@@ -62,32 +60,27 @@ CREATE TABLE dept_emp (
     dept_no     CHAR(4)         NOT NULL,
     from_date   DATE            NOT NULL,
     to_date     DATE            NOT NULL,
-    -- PRIMARY KEY (emp_no,dept_no)
-    PRIMARY KEY (ID),
-    SHARD KEY (ID,emp_no,dept_no)
+    PRIMARY KEY (emp_no,dept_no),
+    SHARD KEY (dept_no)
 );
 
 CREATE TABLE titles (
-    ID BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     emp_no      INT             NOT NULL,
     title       VARCHAR(50)     NOT NULL,
     from_date   DATE            NOT NULL,
     to_date     DATE,
-    -- PRIMARY KEY (emp_no,title, from_date)
-    PRIMARY KEY (ID),
-    SHARD KEY (ID,emp_no)
+    PRIMARY KEY (emp_no,title, from_date),
+    SHARD KEY (emp_no)
 ) 
 ; 
 
 CREATE TABLE salaries (
-    ID BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     emp_no      INT             NOT NULL,
     salary      INT             NOT NULL,
     from_date   DATE            NOT NULL,
     to_date     DATE            NOT NULL,
-    -- PRIMARY KEY (emp_no, from_date)
-    PRIMARY KEY (ID),
-    SHARD KEY (ID,emp_no)
+    PRIMARY KEY (emp_no, from_date),
+    SHARD KEY (emp_no)
 ) 
 ; 
 
