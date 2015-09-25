@@ -43,7 +43,8 @@ CREATE TABLE departments (
     dept_no     CHAR(4)         NOT NULL,
     dept_name   VARCHAR(40)     NOT NULL,
     PRIMARY KEY (dept_no),
-    UNIQUE  KEY (dept_no, dept_name)
+    UNIQUE  KEY (dept_no, dept_name),
+    SHARD  KEY (dept_no, dept_name),
 );
 
 CREATE TABLE dept_manager (
@@ -52,10 +53,9 @@ CREATE TABLE dept_manager (
    dept_no      CHAR(4)         NOT NULL,
    from_date    DATE            NOT NULL,
    to_date      DATE            NOT NULL,
-   FOREIGN SHARD KEY (emp_no)  REFERENCES employees (emp_no),
-   FOREIGN SHARD KEY (dept_no) REFERENCES departments (dept_no),
    -- PRIMARY KEY (emp_no,dept_no)
-   PRIMARY KEY (ID)
+   PRIMARY KEY (ID),
+   SHARD KEY (emp_no,dept_no)
 ); 
 
 CREATE TABLE dept_emp (
@@ -64,10 +64,9 @@ CREATE TABLE dept_emp (
     dept_no     CHAR(4)         NOT NULL,
     from_date   DATE            NOT NULL,
     to_date     DATE            NOT NULL,
-    FOREIGN SHARD KEY (emp_no)  REFERENCES employees   (emp_no) ,
-    FOREIGN SHARD KEY (dept_no) REFERENCES departments (dept_no),
     -- PRIMARY KEY (emp_no,dept_no)
-    PRIMARY KEY (ID)
+    PRIMARY KEY (ID),
+    SHARD KEY (emp_no,dept_no)
 );
 
 CREATE TABLE titles (
@@ -76,9 +75,9 @@ CREATE TABLE titles (
     title       VARCHAR(50)     NOT NULL,
     from_date   DATE            NOT NULL,
     to_date     DATE,
-    FOREIGN SHARD KEY (emp_no) REFERENCES employees (emp_no),
     -- PRIMARY KEY (emp_no,title, from_date)
-    PRIMARY KEY (ID)
+    PRIMARY KEY (ID),
+    SHARD KEY (emp_no)
 ) 
 ; 
 
@@ -88,9 +87,9 @@ CREATE TABLE salaries (
     salary      INT             NOT NULL,
     from_date   DATE            NOT NULL,
     to_date     DATE            NOT NULL,
-    FOREIGN SHARD KEY (emp_no) REFERENCES employees (emp_no),
     -- PRIMARY KEY (emp_no, from_date)
-    PRIMARY KEY (ID)
+    PRIMARY KEY (ID),
+    SHARD KEY (emp_no)
 ) 
 ; 
 
